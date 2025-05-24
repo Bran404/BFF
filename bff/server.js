@@ -4,7 +4,7 @@ const axios = require("axios");
 
 const app = express();
 const PORT = 3001;
-const BACKEND_URL = "http://localhost:3002";
+const BACKEND_URL = "http://localhost:3003"; 
 
 app.use(cors());
 app.use(express.json());
@@ -103,4 +103,72 @@ app.put("/tasks/:id/toggle", async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`🟨 BFF: Servidor iniciado en http://localhost:${PORT}`);
+});
+
+app.get("/people", async (req, res) => {
+  console.log("🟨 BFF: Recibida petición GET /people");
+  console.log("🟨 BFF: Parámetros de consulta:", req.query);
+
+  try {
+    const response = await axios.get(`${BACKEND_URL}/people`);
+    console.log("🟨 BFF: Respuesta del backend:", response.data);
+
+    // No transformar, solo enviar
+    res.json(response.data);
+  } catch (error) {
+    console.error("❌ BFF: Error al obtener personas:", error.message);
+    res.status(500).json({ error: "Error al obtener personas" });
+  }
+});
+
+// Crear nueva persona
+app.post("/people", async (req, res) => {
+  console.log("🟨 BFF: Recibida petición POST /people");
+  console.log("🟨 BFF: Datos recibidos:", req.body);
+
+  try {
+    console.log("🟨 BFF: Enviando petición al backend");
+    const response = await axios.post(`${BACKEND_URL}/people`, req.body);
+    console.log("🟨 BFF: Respuesta del backend:", response.data);
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("❌ BFF: Error al crear persona:", error.message);
+    res.status(500).json({ error: "Error al crear persona" });
+  }
+});
+
+// Eliminar persona
+app.delete("/people/:id", async (req, res) => {
+  console.log("🟨 BFF: Recibida petición DELETE /people/:id");
+  console.log("🟨 BFF: ID de persona a eliminar:", req.params.id);
+
+  try {
+    console.log("🟨 BFF: Enviando petición al backend");
+    await axios.delete(`${BACKEND_URL}/people/${req.params.id}`);
+    console.log("🟨 BFF: Persona eliminada exitosamente en el backend");
+    res.json({ message: "Persona eliminada" });
+  } catch (error) {
+    console.error("❌ BFF: Error al eliminar persona:", error.message);
+    res.status(500).json({ error: "Error al eliminar persona" });
+  }
+});
+
+// Cambiar estado de persona
+app.put("/people/:id/toggle", async (req, res) => {
+  console.log("🟨 BFF: Recibida petición PUT /people/:id/toggle");
+  console.log("🟨 BFF: ID de persona a actualizar:", req.params.id);
+
+  try {
+    console.log("🟨 BFF: Enviando petición al backend");
+    const response = await axios.put(
+      `${BACKEND_URL}/people/${req.params.id}/toggle`
+    );
+    console.log("🟨 BFF: Respuesta del backend:", response.data);
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("❌ BFF: Error al actualizar persona:", error.message);
+    res.status(500).json({ error: "Error al actualizar persona" });
+  }
 });
