@@ -1,14 +1,18 @@
 {
-  "name": "todos-backend",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "Backend para la aplicación de tareas",
   "main": "server.js",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
   "dependencies": {
+    "backend": "file:",
     "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "todos-backend": "file:"
+    "express": "^5.1.0"
   }
 }
