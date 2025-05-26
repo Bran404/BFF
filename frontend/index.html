@@ -3,33 +3,34 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lista de Tareas</title>
+    <title>Listado de personas</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="container">
-      <h1>Lista de Tareas</h1>
+      <h1>Listado de  personas</h1>
 
-      <div class="task-form">
-        <input type="text" id="taskInput" placeholder="Nueva tarea..." />
-        <select id="categorySelect">
-          <option value="trabajo">Trabajo</option>
-          <option value="personal">Personal</option>
-          <option value="estudio">Estudio</option>
+      <div class="personasForm">
+        <input type="text" id="personasInput" placeholder="Ingrese nombre" />
+        <input type="text" id="edadInput" placeholder="Ingrese edad" />
+        <select id="hobbieSelect">
+          <option value="deporte">Deporte</option>
+          <option value="arte">Arte</option>
+          <option value="musica">Musica</option>
         </select>
-        <button onclick="addTask()">Agregar</button>
+        <button onclick="addPersona()" id="addButton">Agregar</button>
       </div>
 
       <div class="filters">
-        <select id="filterSelect" onchange="filterTasks()">
-          <option value="todas">Todas las tareas</option>
-          <option value="trabajo">Trabajo</option>
-          <option value="personal">Personal</option>
-          <option value="estudio">Estudio</option>
+        <select id="filterSelect" onchange="filterHobbie()">
+          <option value="todas">Todos los hobbies</option>
+          <option value="deporte">Deporte</option>
+          <option value="arte">Arte</option>
+          <option value="musica">Musica</option>
         </select>
       </div>
 
-      <ul id="taskList" class="task-list">
+      <ul id="personasList" class="personasList">
         <!-- Las tareas se agregarán aquí dinámicamente -->
       </ul>
     </div>
