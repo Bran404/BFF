@@ -15,8 +15,13 @@ app.get('/personas', (req, res) => {
     console.log("🟩 Backend: Recibida petición GET /personas");
     console.log("🟩 Backend: Parámetros de consulta:", req.query);
 
-    console.log("🟩 Backend: Enviando lista de personas: ",personas);
-    res.json(personas);
+    let resultado = personas;
+    const { hobbie } = req.query;
+    if (hobbie && hobbie !== "todas") {
+        resultado = personas.filter(persona => persona.hobbie === hobbie);
+    }
+    console.log("🟩 Backend: Enviando lista de personas: ",resultado);
+    res.json(resultado);
 });
 //Agregar una persona
 app.post('/persona', (req, res) => {
