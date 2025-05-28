@@ -11,9 +11,10 @@ function displayPersonas(personas){
         li.innerHTML = `
             <span>Nombre: ${persona.nombre} - Edad: ${persona.edad} - Hobbie: ${persona.hobbie}</span>
             <div class="task-actions">
-                <button onclick="deletePersona(${persona.id})">Eliminar</button>
+                <button class="delete-btn" onclick="deletePersona(${persona.id})">Eliminar</button>
             </div>
         `;
+        li.className = "persona-item";
         personasList.appendChild(li);
     });
 }
