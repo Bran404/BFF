@@ -71,10 +71,30 @@ button:hover {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.personasForm {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
 .delete-btn {
   background-color: #f44336;
 }
 
 .delete-btn:hover {
   background-color: #da190b;
+}
+
+.edit-btn{
+  background-color: #2196f3;
+}
+.edit-btn:hover {
+  background-color: #0b7dda;
+}
+
+#updateButton{
+  background-color: #2196f3;
+}
+#updateButton:hover {
+  background-color: #0b7dda;
 }

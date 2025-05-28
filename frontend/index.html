@@ -19,10 +19,11 @@
           <option value="musica">Musica</option>
         </select>
         <button onclick="addPersona()" id="addButton">Agregar</button>
+        <button id="updateButton" style="display: none">Actualizar</button>
       </div>
 
       <div class="filters">
-        <select id="filterSelect" onchange="filterHobbie()">
+        <select id="filterSelect" onchange="filterHobbie()" required>
           <option value="todas">Todos los hobbies</option>
           <option value="deporte">Deporte</option>
           <option value="arte">Arte</option>
@@ -31,7 +32,7 @@
       </div>
 
       <ul id="personasList" class="personasList">
-        <!-- Las tareas se agregarán aquí dinámicamente -->
+        <!-- Listado de personas -->
       </ul>
     </div>
     <script src="app.js"></script>

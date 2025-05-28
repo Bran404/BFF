@@ -79,8 +79,12 @@ app.put("/persona/:id", (req, res) => {
         console.log("🟥 Backend: Error - Persona no encontrada");
         return res.status(404).json({ error: "Persona no encontrada" });
     }
-    //Editar hoobie de persona
-    persona.edad = persona.edad++;
+     // Actualizar los campos recibidos en el body
+    const { nombre, edad, hobbie } = req.body;
+    if (nombre !== undefined) persona.nombre = nombre;
+    if (edad !== undefined) persona.edad = edad;
+    if (hobbie !== undefined) persona.hobbie = hobbie;
+    persona.updatedAt = new Date();
     console.log("🟩 Backend: Persona actualizada", persona);
     res.json(persona);
 });
