@@ -1,96 +1,96 @@
-const express = require("express");
-const cors = require("cors");
+const express = require('express');
+const cors = require('cors');
 
 const app = express();
-const PORT = 3002;
+const PORT = 3003;
 
 app.use(cors());
 app.use(express.json());
 
-// Base de datos en memoria
-let tasks = [];
-let nextId = 1;
+let personas = [];
+let idPersona = 1;
 
-// Obtener todas las tareas
-app.get("/tasks", (req, res) => {
-  console.log("🟩 Backend: Recibida petición GET /tasks");
-  console.log("🟩 Backend: Parámetros de consulta:", req.query);
+//Obtener listado de personas
+app.get('/personas', (req, res) => {
+    console.log("🟩 Backend: Recibida petición GET /personas");
+    console.log("🟩 Backend: Parámetros de consulta:", req.query);
 
-  const { category } = req.query;
-  let filteredTasks = tasks;
+    let resultado = personas;
+    const { hobbie } = req.query;
+    if (hobbie && hobbie !== "todas") {
+        resultado = personas.filter(persona => persona.hobbie === hobbie);
+    }
+    console.log("🟩 Backend: Enviando lista de personas: ",resultado);
+    res.json(resultado);
+});
+//Agregar una persona
+app.post('/persona', (req, res) => {
+    console.log("🟩 Backend: Recibida petición POST /persona");
+    console.log("🟩 Backend: Datos recibidos:", req.body);
 
-  if (category && category !== "todas") {
-    console.log("🟩 Backend: Filtrando tareas por categoría:", category);
-    filteredTasks = tasks.filter((task) => task.category === category);
-  }
+    const { nombre, edad , hobbie} = req.body;
+    if (!nombre || !edad) {
+        console.log("🟥 Backend: Error - Datos incompletos");
+        return res.status(400).json({ error: "Faltan datos requeridos" });
+    }
 
-  console.log("🟩 Backend: Enviando respuesta:", filteredTasks);
-  res.json(filteredTasks);
+    const nuevaPersona = {
+        id: idPersona++,
+        nombre,
+        edad,
+        hobbie,
+        createdAt: new Date(),
+    };
+
+    console.log("🟩 Backend: Verificando persona", nuevaPersona);
+    personas.push(nuevaPersona);
+    console.log("🟩 Backend: Persona añadida");
+    res.status(201).json(nuevaPersona);
 });
 
-// Crear nueva tarea
-app.post("/tasks", (req, res) => {
-  console.log("🟩 Backend: Recibida petición POST /tasks");
-  console.log("🟩 Backend: Datos recibidos:", req.body);
+// Eliminar una persona
+app.delete('/persona/:id', (req, res) => {
+    console.log("🟩 Backend: Recibida petición DELETE /persona/:id");
+    console.log("🟩 Backend: ID de persona a eliminar:", req.params.id);
 
-  const { title, category } = req.body;
+    const id = parseInt(req.params.id);
+    const initialLength = personas.length;
 
-  if (!title || !category) {
-    console.error("❌ Backend: Datos inválidos - título o categoría faltante");
-    return res.status(400).json({ error: "Título y categoría son requeridos" });
-  }
+    personas = personas.filter(persona => persona.id !== id);
 
-  const newTask = {
-    id: nextId++,
-    title,
-    category,
-    completed: false,
-    createdAt: new Date(),
-  };
+    if (personas.length === initialLength) {
+        console.log("🟥 Backend: Error - Persona no encontrada");
+        return res.status(404).json({ error: "Persona no encontrada" });
+    }
 
-  console.log("🟩 Backend: Creando nueva tarea:", newTask);
-  tasks.push(newTask);
-  console.log("🟩 Backend: Tarea creada exitosamente");
-  res.status(201).json(newTask);
+    console.log("🟩 Backend: Persona eliminada");
+    res.json({ message: "Persona eliminada correctamente." });
 });
 
-// Eliminar tarea
-app.delete("/tasks/:id", (req, res) => {
-  console.log("🟩 Backend: Recibida petición DELETE /tasks/:id");
-  console.log("🟩 Backend: ID de tarea a eliminar:", req.params.id);
+// Actualizar una persona
+app.put("/persona/:id", (req, res) => {
+    console.log("🟩 Backend: Recibida petición PUT /persona/:id");
+    console.log("🟩 Backend: ID de persona a actualizar:", req.params.id);
 
-  const id = parseInt(req.params.id);
-  const initialLength = tasks.length;
+    const id = parseInt(req.params.id);
+    const persona = personas.find((persona) => persona.id === id);
 
-  tasks = tasks.filter((task) => task.id !== id);
-
-  if (tasks.length === initialLength) {
-    console.error("❌ Backend: Tarea no encontrada");
-    return res.status(404).json({ error: "Tarea no encontrada" });
-  }
-
-  console.log("🟩 Backend: Tarea eliminada exitosamente");
-  res.json({ message: "Tarea eliminada" });
+    if (!persona) {
+        console.log("🟥 Backend: Error - Persona no encontrada");
+        return res.status(404).json({ error: "Persona no encontrada" });
+    }
+     // Actualizar los campos recibidos en el body
+    const { nombre, edad, hobbie } = req.body;
+    if (nombre !== undefined) persona.nombre = nombre;
+    if (edad !== undefined) persona.edad = edad;
+    if (hobbie !== undefined) persona.hobbie = hobbie;
+    persona.updatedAt = new Date();
+    console.log("🟩 Backend: Persona actualizada", persona);
+    res.json(persona);
 });
 
-// Cambiar estado de tarea
-app.put("/tasks/:id/toggle", (req, res) => {
-  console.log("🟩 Backend: Recibida petición PUT /tasks/:id/toggle");
-  console.log("🟩 Backend: ID de tarea a actualizar:", req.params.id);
-
-  const id = parseInt(req.params.id);
-  const task = tasks.find((task) => task.id === id);
-
-  if (!task) {
-    console.error("❌ Backend: Tarea no encontrada");
-    return res.status(404).json({ error: "Tarea no encontrada" });
-  }
-
-  task.completed = !task.completed;
-  console.log("🟩 Backend: Estado de tarea actualizado:", task);
-  res.json(task);
-});
-
+// Iniciar el servidor
 app.listen(PORT, () => {
-  console.log(`🟩 Backend: Servidor iniciado en http://localhost:${PORT}`);
+    console.log(`🟩 Backend: Servidor escuchando en http://localhost:${PORT}`);
 });
+
